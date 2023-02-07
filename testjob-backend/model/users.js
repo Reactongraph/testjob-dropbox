@@ -1,30 +1,26 @@
-const mongoose= require('mongoose');
-const fileData= require('./fileData')
+const mongoose = require("mongoose");
+const fileData = require("./fileData");
 
 const userSchema = new mongoose.Schema({
-    firstName:{
-        type: String,
-    },
+  firstName: {
+    type: String,
+  },
 
-    lastName:{
-        type: String,
-    },
+  lastName: {
+    type: String,
+  },
 
-    email:{
-        type: String,
-        unique: true,
-    },
-    password:{
-        type: String,
-    },
-    files:{
-        type: Array,
-        ref: fileData
-    },
-    token: {
-        type: String,
-    },
-},)
+  email: {
+    type: String,
+    unique: true,
+  },
+  password: {
+    type: String,
+  },
+  token: {
+    type: String,
+  },
+});
 
-userSchema.set("timestamps",true)
-module.exports =mongoose.model('User',userSchema);
+userSchema.set("timestamps", true);
+module.exports = mongoose.model("User", userSchema);

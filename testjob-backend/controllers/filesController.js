@@ -1,14 +1,13 @@
 const User = require("../model/users");
-const { s3 } = require("../middleware/upload");
 const fileData = require("../model/fileData");
+const { s3 } = require("../middleware/upload");
 const { response } = require("express");
-
 
 module.exports = class Api {
   static async uploadFile(req, res) {
     try {
       const { user_id } = req.body;
-      console.log("+++++++++++++++++",user_id);
+      console.log("+++++++++++++++++", user_id);
       const params = {
         Bucket: process.env.MY_AWS_BUCKET_NAME,
         Key: req.files.image[0].originalname,
@@ -37,12 +36,15 @@ module.exports = class Api {
           if (error) {
             res.status(500).send({ err: error });
           }
-          const finalData = { ...newdata, file: data.Location };
-          console.log("++++++++++++nhsvcsdcnja", finalData);
-          const uploaded = await User.findOneAndUpdate(
-            { _id: user_id },
-            { $push: { files: finalData } }
-          );
+
+          const user = await User.findById({ _id: user_id });
+          const finalData = {
+            ...newdata,
+            file: data.Location,
+            user_id: user._id,
+          };
+          const uploaded = await fileData.create(finalData);
+          console.log("After Upload", uploaded);
 
           res
             .status(201)
@@ -58,8 +60,10 @@ module.exports = class Api {
     const user_id = req.query.user_id;
     try {
       if (req.headers["x-access-token"]) {
-        const files = await User.findOne({ _id: user_id });
-        const data = files.files;
+        console.log("user_id", user_id);
+        const data = await fileData.findOne({ user_id: user_id });
+        console.log("all data", data);
+
         res.json({ sucess: true, data });
       } else {
         res.json({ sucess: false, error: "Access token not found" });
@@ -70,23 +74,27 @@ module.exports = class Api {
   }
 
   static async deleteFile(req, res) {
-    console.log("in deleteFile api", req.params);
     const { user_id, files_id } = req.params;
 
     try {
       console.log("++++++++", user_id, files_id);
       if (req.headers["x-access-token"]) {
-        const updatedData = await User.deleteOne(
-        {"files.user_id": user_id,},(err, result)=>{
-          console.log("ducument delete", result)
+        const user = await User.findById({ _id: user_id });
+        if (user._id == user_id) {
+          const updatedData = await fileData.deleteOne({ _id: files_id });
+          res.json({
+            message: "deleted successfully",
+            sucess: true,
+            data: updatedData,
+          });
+        } else {
+          console.log("errrrrrrrrrrrrrrrrrrrrrr");
         }
-        );
-        console.log("After deleted", updatedData);
       } else {
         console.log("in else block");
       }
     } catch (e) {
-      console.log("Error in catch block", e)
+      console.log("Error in catch block", e);
     }
   }
 };
