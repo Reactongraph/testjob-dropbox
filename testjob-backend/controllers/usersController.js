@@ -53,7 +53,7 @@ module.exports = class UserApi {
       if (!(email && password)) {
         res.status(400).send("All input is required");
       }
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ email }).maxTimeMS(20000);
   
       if (user && (await bcrypt.compare(password, user.password))) {
         const token = jwt.sign(
