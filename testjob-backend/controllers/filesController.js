@@ -7,7 +7,7 @@ module.exports = class Api {
     try {
       const { user_id } = req.body;
       const params = {
-        Bucket: process.env.MY_AWS_BUCKET_NAME,
+        Bucket: process.env.AWS_BUCKET_NAME,
         Key: req.files.image[0].originalname,
         Body: req.files.image[0].buffer,
         ACL: "public-read-write",
@@ -27,7 +27,7 @@ module.exports = class Api {
           contentType: imageType,
         };
         let params = {
-          Bucket: process.env.MY_AWS_BUCKET_NAME,
+          Bucket: process.env.AWS_BUCKET_NAME,
           Key: req.files.file[0].originalname,
           Body: req.files.file[0].buffer,
           ACL: "public-read-write",
@@ -83,7 +83,7 @@ module.exports = class Api {
       if (image || file) {
         if (image && file) {
           const params = {
-            Bucket: process.env.MY_AWS_BUCKET_NAME,
+            Bucket: process.env.AWS_BUCKET_NAME,
             Key: req.files.image[0].originalname,
             Body: req.files.image[0].buffer,
             ACL: "public-read-write",
@@ -95,7 +95,7 @@ module.exports = class Api {
               res.status(500).send({ err: error });
             }
             let params = {
-              Bucket: process.env.MY_AWS_BUCKET_NAME,
+              Bucket: process.env.AWS_BUCKET_NAME,
               Key: req.files.file[0].originalname,
               Body: req.files.file[0].buffer,
               ACL: "public-read-write",
@@ -131,7 +131,7 @@ module.exports = class Api {
           });
         } else if (image) {
           const params = {
-            Bucket: process.env.MY_AWS_BUCKET_NAME,
+            Bucket: process.env.AWS_BUCKET_NAME,
             Key: req.files.image[0].originalname,
             Body: req.files.image[0].buffer,
             ACL: "public-read-write",
@@ -158,7 +158,7 @@ module.exports = class Api {
           });
         } else {
           const params = {
-            Bucket: process.env.MY_AWS_BUCKET_NAME,
+            Bucket: process.env.AWS_BUCKET_NAME,
             Key: req.files.file[0].originalname,
             Body: req.files.file[0].buffer,
             ACL: "public-read-write",

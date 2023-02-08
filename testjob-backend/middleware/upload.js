@@ -19,8 +19,8 @@ const filefilter = (req, file, cb) => {
 const upload = multer({ storage: storage, fileFilter: filefilter });
 
 const s3 = new Aws.S3({
-  accessKeyId: process.env.MY_AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.MY_AWS_ACCESS_KEY_SECRET,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_ACCESS_KEY_SECRET,
 });
 
 
