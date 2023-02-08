@@ -43,6 +43,7 @@ module.exports = class UserApi {
 
       
     } catch (err) {
+      console.log("in signup catch block", err);
       res.status(500).send({ message: err });
     }
   }
