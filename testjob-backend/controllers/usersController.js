@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 
 module.exports = class UserApi {
   static async userSignup(req, res) {
+    console.log("in signup");
     try {
       const { firstName, lastName, email, password } = req.body;
 
@@ -66,7 +67,7 @@ module.exports = class UserApi {
         user.token = token;
         console.log("after login",user);
         // user
-        res.status(200).json({message: "login success",user});
+        res.send({message: "login success",user});
       }
       res.status(400).send("Invalid Credentials");
     } catch (err) {

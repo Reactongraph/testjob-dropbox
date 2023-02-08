@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const { upload } = require("../middleware/upload");
 const auth = require("../middleware/auth");
-const parser = require("body-parser").json();
+// const parser = require("body-parser").json();
 
 const uploadPostData = (req, res, next) => {
   upload.fields([
@@ -17,8 +17,8 @@ const uploadPostData = (req, res, next) => {
 };
 
 router.post("/upload", auth, uploadPostData, Api.uploadFile);
-router.get("/", auth, parser, Api.getALLFiles);
-// router.put('/update/:user_id',auth,parser,Api.updateFile)
-router.delete("/delete/:user_id/:files_id", auth, parser, Api.deleteFile);
+router.get("/", auth, Api.getALLFiles);
+router.put('/update/:user_id',auth,uploadPostData,Api.updateFile)
+router.delete("/delete/:user_id/:files_id", auth, Api.deleteFile);
 
 module.exports = router;

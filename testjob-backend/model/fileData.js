@@ -3,10 +3,10 @@ const fileSchema = new mongoose.Schema({
   user_id: {
     type: String,
   },
-  ContentLength: {
-    type: Number,
+  contentType: {
+    type: String,
   },
-  ContentType: {
+  imageName:{
     type: String,
   },
   fileName: {
