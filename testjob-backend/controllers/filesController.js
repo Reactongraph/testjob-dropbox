@@ -191,6 +191,7 @@ module.exports = class Api {
       }
     } catch (e) {
       console.log("error updating", e);
+      res.json({message: "oops something went wrong", error: e});
     }
   }
 
@@ -213,6 +214,7 @@ module.exports = class Api {
       }
     } catch (e) {
       console.log("Error in catch block", e);
+      res.json({message: "oops something went wrong", error: e});
     }
   }
 };

@@ -30,7 +30,7 @@ module.exports = class UserApi {
         const user = await User.create(obj);
         console.log("user",user)  
         const token = jwt.sign({id:user._id,email  }, process.env.JWT_SECRET, {
-            expiresIn: "2h",
+            expiresIn: "9h",
           });
           console.log("TOken", token)
         user.token = token
@@ -62,7 +62,7 @@ module.exports = class UserApi {
           { user_id: user._id, email },
           process.env.JWT_SECRET,
           {
-            expiresIn: "2h",
+            expiresIn: "9h",
           }
         );
         user.token = token;
