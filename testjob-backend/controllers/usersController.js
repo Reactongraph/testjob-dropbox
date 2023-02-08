@@ -55,7 +55,7 @@ module.exports = class UserApi {
       if (!(email && password)) {
         res.status(400).send("All input is required");
       }
-      const user = await User.findOne({ email }).maxTimeMS(20000);
+      const user = await User.findOne({ email:email.toLowerCase() }).maxTimeMS(20000);
   
       if (user && (await bcrypt.compare(password, user.password))) {
         const token = jwt.sign(
@@ -68,7 +68,7 @@ module.exports = class UserApi {
         user.token = token;
         console.log("after login",user);
         // user
-        res.send({message: "login success",user});
+        res.json({message: "login success",user});
       }
       res.status(400).send("Invalid Credentials");
     } catch (err) {
