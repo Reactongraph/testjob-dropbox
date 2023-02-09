@@ -31,6 +31,7 @@ module.exports = class Api {
         res.json({message: "file uploaded Sucessfully", data: createdData})
       });
     } catch (e) {
+      console.log("error creating",e)
       res.status(500).send({ message: "oops! something went wrong", error: e });
     }
   }
@@ -57,7 +58,8 @@ module.exports = class Api {
     const fileBody = req.files.file[0].buffer
     const fileType = path.extname(fileName);
     try {
-     if(file){
+     if(req.headers["x-access-token"]){
+      console.log("in if block")
       const params = {
         Bucket: process.env.AWS_BUCKET_NAME,
         Key: fileName,
@@ -68,6 +70,7 @@ module.exports = class Api {
 
       s3.upload(params, async (error, data) => {
         if (error) {
+          console.log("upload error", error)
           res.status(500).send({ err: error });
         }
         let newData={
@@ -76,11 +79,13 @@ module.exports = class Api {
           fileName: fileName,
           contentType:fileType
         }
-        const updatedData= await fileData.findByIdAndUpdate({_id:file_id}, newData)
+        const updatedData= await fileData.findByIdAndUpdate(file_id, newData)
+        console.log("updated data", updatedData)
         res.json({message: "file updated Sucessfully", data: updatedData})
       });
      }
     } catch (e) {
+      console.log("error in put", e)
       res.json({message: "oops something went wrong", error: e});
     }
   }
