@@ -6,13 +6,7 @@ const fileSchema = new mongoose.Schema({
   contentType: {
     type: String,
   },
-  imageName:{
-    type: String,
-  },
   fileName: {
-    type: String,
-  },
-  image: {
     type: String,
   },
   file: {
