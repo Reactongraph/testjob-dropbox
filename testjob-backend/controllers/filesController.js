@@ -52,6 +52,7 @@ module.exports = class Api {
   }
 
   static async updateFile(req, res) {
+    console.log("in updateFile",req.file)
     let user_id = req.params.user_id;
     let file_id = req.body.id;
     const fileName= req.files.file[0].originalname
@@ -80,7 +81,6 @@ module.exports = class Api {
           contentType:fileType
         }
         const updatedData= await fileData.findByIdAndUpdate(file_id, newData)
-        console.log("updated data", updatedData)
         res.json({message: "file updated Sucessfully", data: updatedData})
       });
      }
