@@ -17,11 +17,21 @@ const filefilter = (req, file, cb) => {
 };
 
 const upload = multer({ storage: storage, fileFilter: filefilter });
-
 const s3 = new Aws.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_ACCESS_KEY_SECRET,
 });
 
+const uploadPostData = (req, res, next) => {
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "file", maxCount: 1 },
+  ])(req, res, (err) => {
+    req.body.image = req.files.image;
+    req.body.file = req.files.file;
+    next();
+  });
+};
 
-module.exports = {upload , s3}
+
+module.exports = { s3, uploadPostData}

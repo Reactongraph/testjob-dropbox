@@ -52,7 +52,6 @@ module.exports = class Api {
   }
 
   static async updateFile(req, res) {
-    console.log("in updateFile",req.file)
     let user_id = req.params.user_id;
     let file_id = req.body.id;
     const fileName= req.files.file[0].originalname
@@ -60,7 +59,6 @@ module.exports = class Api {
     const fileType = path.extname(fileName);
     try {
      if(req.headers["x-access-token"]){
-      console.log("in if block")
       const params = {
         Bucket: process.env.AWS_BUCKET_NAME,
         Key: fileName,
@@ -71,7 +69,6 @@ module.exports = class Api {
 
       s3.upload(params, async (error, data) => {
         if (error) {
-          console.log("upload error", error)
           res.status(500).send({ err: error });
         }
         let newData={
@@ -104,8 +101,6 @@ module.exports = class Api {
             data: updatedData,
           });
         }
-      } else {
-        console.log("in else block");
       }
     } catch (e) {
       console.log("Error in catch block", e);
