@@ -4,8 +4,8 @@ const { s3 } = require("../middleware/upload");
 const path = require("path");
 module.exports = class Api {
   static async uploadFile(req, res) {
-    const fileName= req.files.file[0].originalname
-    const fileBody = req.files.file[0].buffer
+    const fileName = req.files.file[0].originalname;
+    const fileBody = req.files.file[0].buffer;
     const fileType = path.extname(fileName);
     try {
       const { user_id } = req.body;
@@ -21,17 +21,17 @@ module.exports = class Api {
         if (error) {
           res.status(500).send({ err: error });
         }
-        let newData={
+        let newData = {
           user_id,
           file: data.Location,
           fileName: fileName,
-          contentType:fileType
-        }
-        const createdData= await fileData.create(newData)
-        res.json({message: "file uploaded Sucessfully", data: createdData})
+          contentType: fileType,
+        };
+        const createdData = await fileData.create(newData);
+        res.json({ message: "file uploaded Sucessfully", data: createdData });
       });
     } catch (e) {
-      console.log("error creating",e)
+      console.log("error creating", e);
       res.status(500).send({ message: "oops! something went wrong", error: e });
     }
   }
@@ -54,36 +54,41 @@ module.exports = class Api {
   static async updateFile(req, res) {
     let user_id = req.params.user_id;
     let file_id = req.body.id;
-    const fileName= req.files.file[0].originalname
-    const fileBody = req.files.file[0].buffer
+    const fileName = req.files.file[0].originalname;
+    const fileBody = req.files.file[0].buffer;
     const fileType = path.extname(fileName);
     try {
-     if(req.headers["x-access-token"]){
-      const params = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: fileName,
-        Body: fileBody,
-        ACL: "public-read-write",
-        ContentType: fileType,
-      };
+      if (req.headers["x-access-token"]) {
+        const params = {
+          Bucket: process.env.AWS_BUCKET_NAME,
+          Key: fileName,
+          Body: fileBody,
+          ACL: "public-read-write",
+          ContentType: fileType,
+        };
 
-      s3.upload(params, async (error, data) => {
-        if (error) {
-          res.status(500).send({ err: error });
-        }
-        let newData={
-          user_id,
-          file: data.Location,
-          fileName: fileName,
-          contentType:fileType
-        }
-        const updatedData= await fileData.findByIdAndUpdate(file_id, newData)
-        res.json({message: "file updated Sucessfully", data: updatedData})
-      });
-     }
+        s3.upload(params, async (error, data) => {
+          if (error) {
+            res.status(500).send({ err: error });
+          }
+          let newData = {
+            user_id,
+            file: data.Location,
+            fileName: fileName,
+            contentType: fileType,
+          };
+          console.log(newData)
+          const dataToBeUpdated = await fileData.findByIdAndUpdate(
+            file_id,
+            newData
+          );
+          const updatedData = await fileData.findById(file_id);
+          res.json({ message: "file updated Sucessfully", data: updatedData });
+        });
+      }
     } catch (e) {
-      console.log("error in put", e)
-      res.json({message: "oops something went wrong", error: e});
+      console.log("error in put", e);
+      res.json({ message: "oops something went wrong", error: e });
     }
   }
 
@@ -104,7 +109,7 @@ module.exports = class Api {
       }
     } catch (e) {
       console.log("Error in catch block", e);
-      res.json({message: "oops something went wrong", error: e});
+      res.json({ message: "oops something went wrong", error: e });
     }
   }
-}
+};
