@@ -6,7 +6,6 @@ module.exports = class UserApi {
   static async userSignup(req, res) {
     try {
       const { firstName, lastName, email, password } = req.body;
-
       if (!firstName || !lastName || !email || !password) {
         return res.status(400).json({
           message: "Please fill all the fields",
@@ -32,7 +31,6 @@ module.exports = class UserApi {
           }
         );
         user.token = token;
-
         res
           .status(201)
           .json({ message: "User created successfully", user, success: true });
@@ -52,7 +50,6 @@ module.exports = class UserApi {
       const user = await User.findOne({ email: email.toLowerCase() }).maxTimeMS(
         20000
       );
-
       if (user && (await bcrypt.compare(password, user.password))) {
         const token = jwt.sign(
           { user_id: user._id, email },
