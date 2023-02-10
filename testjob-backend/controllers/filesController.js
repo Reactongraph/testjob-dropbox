@@ -4,14 +4,11 @@ const { s3 } = require("../middleware/upload");
 const path = require("path");
 module.exports = class Api {
   static async uploadFile(req, res) {
-    
     const fileName = req.files.file[0].originalname;
     const fileBody = req.files.file[0].buffer;
     const fileType = path.extname(fileName);
-    console.log("upload api called", fileName, fileType);
     try {
       const { user_id } = req.body;
-      console.log("upload api called try block", user_id)
       const params = {
         Bucket: process.env.AWS_BUCKET_NAME,
         Key: fileName,
@@ -31,7 +28,6 @@ module.exports = class Api {
           contentType: fileType,
         };
         const createdData = await fileData.create(newData);
-        console.log("upload api data created: " + createdData)
         res.json({ message: "file uploaded Sucessfully", data: createdData });
       });
     } catch (e) {
@@ -41,12 +37,11 @@ module.exports = class Api {
   }
 
   static async getALLFiles(req, res) {
-    console.log("get ALl files Api called",req.query.user_id )
     const user_id = req.query.user_id;
     try {
-      console.log("in try block",user_id)
+      console.log("in try block", user_id);
       if (req.headers["x-access-token"]) {
-        console.log("in try block",req.headers["x-access-token"])
+        console.log("in try block", req.headers["x-access-token"]);
         const data = await fileData.find({ user_id: user_id });
 
         res.json({ sucess: true, data });
@@ -65,7 +60,6 @@ module.exports = class Api {
     const fileName = req.files.file[0].originalname;
     const fileBody = req.files.file[0].buffer;
     const fileType = path.extname(fileName);
-    console.log("update Api data: called", fileName, fileType, user_id,file_id)
     try {
       if (req.headers["x-access-token"]) {
         const params = {
@@ -86,13 +80,11 @@ module.exports = class Api {
             fileName: fileName,
             contentType: fileType,
           };
-          console.log(newData)
           const dataToBeUpdated = await fileData.findByIdAndUpdate(
             file_id,
             newData
           );
           const updatedData = await fileData.findById(file_id);
-          console.log("upload api data created: " + updatedData)
           res.json({ message: "file updated Sucessfully", data: updatedData });
         });
       }
@@ -104,7 +96,6 @@ module.exports = class Api {
 
   static async deleteFile(req, res) {
     const { user_id, files_id } = req.params;
-
     try {
       if (req.headers["x-access-token"]) {
         const data = await fileData.findById({ _id: files_id });
